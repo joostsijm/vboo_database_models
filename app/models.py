@@ -61,8 +61,7 @@ class ResourceStat(Base):
     id = Column(Integer, primary_key=True)
     explored = Column(SmallInteger)
     deep_exploration = Column(SmallInteger)
-    percentage_explored = Column(SmallInteger)
-    percentage_total = Column(SmallInteger)
+    limit_left = Column(SmallInteger)
 
     resource_track_id = Column(Integer, ForeignKey('resource_track.id'))
     resource_track = relationship(
