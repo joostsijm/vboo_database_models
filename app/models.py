@@ -78,7 +78,9 @@ class ResourceStat(Base):
 
 state_region = Table('state_region', Base.metadata,
     Column('state_id', Integer, ForeignKey('state.id')),
-    Column('region_id', Integer, ForeignKey('region.id'))
+    Column('region_id', Integer, ForeignKey('region.id')),
+    Column('from_date_time', DateTime),
+    Column('until_date_time', DateTime),
 )
 
 class State(Base):
@@ -118,17 +120,23 @@ class DepartmentStat(Base):
 
 player_party = Table('player_party', Base.metadata,
     Column('player_id', Integer, ForeignKey('player.id')),
-    Column('party_id', Integer, ForeignKey('party.id'))
+    Column('party_id', Integer, ForeignKey('party.id')),
+    Column('from_date_time', DateTime),
+    Column('until_date_time', DateTime),
 )
 
 player_residency = Table('player_residency', Base.metadata,
     Column('player_id', Integer, ForeignKey('player.id')),
-    Column('region_id', Integer, ForeignKey('region.id'))
+    Column('region_id', Integer, ForeignKey('region.id')),
+    Column('from_date_time', DateTime),
+    Column('until_date_time', DateTime),
 )
 
 player_location  = Table('player_location', Base.metadata,
     Column('player_id', Integer, ForeignKey('player.id')),
-    Column('region_id', Integer, ForeignKey('region.id'))
+    Column('region_id', Integer, ForeignKey('region.id')),
+    Column('from_date_time', DateTime),
+    Column('until_date_time', DateTime),
 )
 
 class Player(Base):
@@ -175,6 +183,11 @@ class ElectionStat(Base):
     election_id = Column(Integer, ForeignKey('election.id'))
     election = relationship(
         "Election",
+        backref=backref("election_stats", lazy="dynamic")
+    )
+    party_id = Column(Integer, ForeignKey('party.id'))
+    party = relationship(
+        "Party",
         backref=backref("election_stats", lazy="dynamic")
     )
 
@@ -246,4 +259,39 @@ class FactoryStat(Base):
     region = relationship(
         'Region',
         backref=backref('factory_stats', lazy='dynamic')
+    )
+
+
+class MarketTrack(Base):
+    """Model for market track"""
+    __tablename__ = 'market_track'
+    id = Column(Integer, primary_key=True)
+    date_time = Column(DateTime)
+
+
+class PersonalMarketStat(Base):
+    """Model for market stat"""
+    __tablename__ = 'personal_market_stat'
+    id = Column(Integer, primary_key=True)
+    item_type = Column(SmallInteger)
+    price = Column(Integer)
+
+    market_track_id = Column(Integer, ForeignKey('market_track.id'))
+    market_track = relationship(
+        'MarketTrack',
+        backref=backref('personal_market_stats', lazy='dynamic')
+    )
+
+
+class StateMarketStat(Base):
+    """Model for market stat"""
+    __tablename__ = 'state_market_stat'
+    id = Column(Integer, primary_key=True)
+    item_type = Column(SmallInteger)
+    price = Column(Integer)
+
+    market_track_id = Column(Integer, ForeignKey('market_track.id'))
+    market_track = relationship(
+        'MarketTrack',
+        backref=backref('state_market_stats', lazy='dynamic')
     )
