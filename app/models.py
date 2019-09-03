@@ -8,11 +8,11 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 meta = MetaData(naming_convention={
-    "ix": "ix_%(column_0_label)s",
-    "uq": "uq_%(table_name)s_%(column_0_name)s",
-    "ck": "ck_%(table_name)s_%(constraint_name)s",
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-    "pk": "pk_%(table_name)s"
+    'ix': 'ix_%(column_0_label)s',
+    'uq': 'uq_%(table_name)s_%(column_0_name)s',
+    'ck': 'ck_%(table_name)s_%(constraint_name)s',
+    'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
+    'pk': 'pk_%(table_name)s'
 })
 Base = declarative_base(metadata=meta)
 
@@ -37,8 +37,8 @@ class DeepExploration(Base):
     resource_type = Column(SmallInteger)
     region_id = Column(Integer, ForeignKey('region.id'))
     region_track = relationship(
-        "Region",
-        backref=backref("deep_explorations", lazy="dynamic")
+        'Region',
+        backref=backref('deep_explorations', lazy='dynamic')
     )
 
 
@@ -50,8 +50,8 @@ class ResourceTrack(Base):
     date_time = Column(DateTime, default=datetime.datetime.utcnow)
     state_id = Column(Integer, ForeignKey('state.id'))
     state = relationship(
-        "State",
-        backref=backref("resource_tracks", lazy="dynamic")
+        'State',
+        backref=backref('resource_tracks', lazy='dynamic')
     )
 
 
@@ -65,30 +65,33 @@ class ResourceStat(Base):
 
     resource_track_id = Column(Integer, ForeignKey('resource_track.id'))
     resource_track = relationship(
-        "ResourceTrack",
-        backref=backref("resource_stats", lazy="dynamic")
+        'ResourceTrack',
+        backref=backref('resource_stats', lazy='dynamic')
     )
 
     region_id = Column(Integer, ForeignKey('region.id'))
     region = relationship(
-        "Region",
-        backref=backref("resource_stats", lazy="dynamic")
+        'Region',
+        backref=backref('resource_stats', lazy='dynamic')
     )
 
 
-state_region = Table('state_region', Base.metadata,
+state_region = Table(
+    'state_region',
+    Base.metadata,
     Column('state_id', Integer, ForeignKey('state.id')),
     Column('region_id', Integer, ForeignKey('region.id')),
     Column('from_date_time', DateTime),
     Column('until_date_time', DateTime),
 )
 
+
 class State(Base):
     """Model for state"""
     __tablename__ = 'state'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    regions = relationship("Region", secondary=state_region)
+    regions = relationship('Region', secondary=state_region)
 
 class Department(Base):
     """Model for department"""
@@ -107,32 +110,38 @@ class DepartmentStat(Base):
 
     player_id = Column(Integer, ForeignKey('player.id'))
     player = relationship(
-        "Player",
-        backref=backref("department_stats", lazy="dynamic")
+        'Player',
+        backref=backref('department_stats', lazy='dynamic')
     )
 
     department_id = Column(Integer, ForeignKey('department.id'))
     department = relationship(
-        "Department",
-        backref=backref("stats", lazy="dynamic")
+        'Department',
+        backref=backref('stats', lazy='dynamic')
     )
 
 
-player_party = Table('player_party', Base.metadata,
+player_party = Table(
+    'player_party',
+    Base.metadata,
     Column('player_id', Integer, ForeignKey('player.id')),
     Column('party_id', Integer, ForeignKey('party.id')),
     Column('from_date_time', DateTime),
     Column('until_date_time', DateTime),
 )
 
-player_residency = Table('player_residency', Base.metadata,
+player_residency = Table(
+    'player_residency',
+    Base.metadata,
     Column('player_id', Integer, ForeignKey('player.id')),
     Column('region_id', Integer, ForeignKey('region.id')),
     Column('from_date_time', DateTime),
     Column('until_date_time', DateTime),
 )
 
-player_location  = Table('player_location', Base.metadata,
+player_location = Table(
+    'player_location',
+    Base.metadata,
     Column('player_id', Integer, ForeignKey('player.id')),
     Column('region_id', Integer, ForeignKey('region.id')),
     Column('from_date_time', DateTime),
@@ -145,9 +154,9 @@ class Player(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     nation = Column(String)
-    residencies = relationship("Region", secondary=player_residency)
-    locations = relationship("Region", secondary=player_location)
-    parties = relationship("Region", secondary=player_party)
+    residencies = relationship('Region', secondary=player_residency)
+    locations = relationship('Region', secondary=player_location)
+    parties = relationship('Region', secondary=player_party)
 
 
 class Party(Base):
@@ -168,8 +177,8 @@ class Election(Base):
     convocation_date_time = Column(DateTime)
 
     state = relationship(
-        "State",
-        backref=backref("elections", lazy="dynamic")
+        'State',
+        backref=backref('elections', lazy='dynamic')
     )
 
 
@@ -182,13 +191,13 @@ class ElectionStat(Base):
 
     election_id = Column(Integer, ForeignKey('election.id'))
     election = relationship(
-        "Election",
-        backref=backref("election_stats", lazy="dynamic")
+        'Election',
+        backref=backref('election_stats', lazy='dynamic')
     )
     party_id = Column(Integer, ForeignKey('party.id'))
     party = relationship(
-        "Party",
-        backref=backref("election_stats", lazy="dynamic")
+        'Party',
+        backref=backref('election_stats', lazy='dynamic')
     )
 
 
@@ -199,13 +208,13 @@ class MilitaryAcademy(Base):
     date_time = Column(DateTime)
     player_id = Column(Integer, ForeignKey('player.id'))
     player = relationship(
-        "User",
+        'User',
         backref=backref('military_academies', lazy='dynamic')
     )
 
     region_id = Column(Integer, ForeignKey('region.id'))
     region = relationship(
-        "Region",
+        'Region',
         backref=backref('military_academies', lazy='dynamic')
     )
 
