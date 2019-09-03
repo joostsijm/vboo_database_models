@@ -92,6 +92,11 @@ class State(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     regions = relationship('Region', secondary=state_region)
+    capital_id = Column(Integer, ForeignKey('region.id'))
+    capital = relationship(
+        'Region',
+        backref=backref('state_capital', lazy='dynamic')
+    )
 
 class Department(Base):
     """Model for department"""
@@ -99,6 +104,12 @@ class Department(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     department_type = Column(Integer)
+
+    state_id = Column(Integer, ForeignKey('state.id'))
+    state = relationship(
+        'State',
+        backref=backref('elections', lazy='dynamic')
+    )
 
 
 class DepartmentStat(Base):
@@ -173,9 +184,9 @@ class Election(Base):
     """Model for election"""
     __tablename__ = 'election'
     id = Column(Integer, primary_key=True)
-    state_id = Column(Integer, ForeignKey('state.id'))
     convocation_date_time = Column(DateTime)
 
+    state_id = Column(Integer, ForeignKey('state.id'))
     state = relationship(
         'State',
         backref=backref('elections', lazy='dynamic')
