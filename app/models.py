@@ -177,3 +177,73 @@ class ElectionStat(Base):
         "Election",
         backref=backref("election_stats", lazy="dynamic")
     )
+
+
+class MilitaryAcademy(Base):
+    """Model for military academy"""
+    __tablename__ = 'military_academy'
+    id = Column(Integer, primary_key=True)
+    date_time = Column(DateTime)
+    player_id = Column(Integer, ForeignKey('player.id'))
+    player = relationship(
+        "User",
+        backref=backref('military_academies', lazy='dynamic')
+    )
+
+    region_id = Column(Integer, ForeignKey('region.id'))
+    region = relationship(
+        "Region",
+        backref=backref('military_academies', lazy='dynamic')
+    )
+
+
+class Factory(Base):
+    """Model for factory"""
+    __tablename__ = 'factory'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+    player_id = Column(Integer, ForeignKey('player.id'))
+    player = relationship(
+        'User',
+        backref=backref('factories', lazy='dynamic')
+    )
+
+
+class FactoryTrack(Base):
+    """Model for facctory track"""
+    __tablename__ = 'factory_track'
+    id = Column(Integer, primary_key=True)
+    date_time = Column(DateTime)
+
+    state_id = Column(Integer, ForeignKey('state.id'))
+    state = relationship(
+        'State',
+        backref=backref('factory_tracks', lazy='dynamic')
+    )
+
+
+class FactoryStat(Base):
+    """Model for factory"""
+    __tablename__ = 'factory_stat'
+    id = Column(Integer, primary_key=True)
+    level = Column(SmallInteger)
+    workers = Column(SmallInteger)
+    experience = Column(Integer)
+    wage = Column(Integer)
+
+    factory_id = Column(Integer, ForeignKey('factory.id'))
+    factory = relationship(
+        'FactoryTrack',
+        backref=backref('factory_stats', lazy='dynamic')
+    )
+    factory_track_id = Column(Integer, ForeignKey('factory_track.id'))
+    factory_track = relationship(
+        'FactoryTrack',
+        backref=backref('factory_stats', lazy='dynamic')
+    )
+    region_id = Column(Integer, ForeignKey('region.id'))
+    region = relationship(
+        'Region',
+        backref=backref('factory_stats', lazy='dynamic')
+    )
