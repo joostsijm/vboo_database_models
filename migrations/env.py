@@ -63,7 +63,8 @@ def run_migrations_offline():
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        include_object=include_object
+        include_object=include_object,
+        compare_type=True,
     )
 
     with context.begin_transaction():
@@ -87,7 +88,8 @@ def run_migrations_online():
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            include_object=include_object
+            include_object=include_object,
+            compare_type=True,
         )
 
         with context.begin_transaction():
