@@ -2,7 +2,7 @@
 
 import datetime
 
-from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, SmallInteger, DateTime, Table
+from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, SmallInteger, DateTime, Table, BigInteger
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -119,7 +119,7 @@ class DepartmentStat(Base):
     date_time = Column(DateTime)
     points = Column(SmallInteger)
 
-    player_id = Column(Integer, ForeignKey('player.id'))
+    player_id = Column(BigInteger, ForeignKey('player.id'))
     player = relationship(
         'Player',
         backref=backref('department_stats', lazy='dynamic')
@@ -135,7 +135,7 @@ class DepartmentStat(Base):
 player_party = Table(
     'player_party',
     Base.metadata,
-    Column('player_id', Integer, ForeignKey('player.id')),
+    Column('player_id', BigInteger, ForeignKey('player.id')),
     Column('party_id', Integer, ForeignKey('party.id')),
     Column('from_date_time', DateTime),
     Column('until_date_time', DateTime),
@@ -144,7 +144,7 @@ player_party = Table(
 player_residency = Table(
     'player_residency',
     Base.metadata,
-    Column('player_id', Integer, ForeignKey('player.id')),
+    Column('player_id', BigInteger, ForeignKey('player.id')),
     Column('region_id', Integer, ForeignKey('region.id')),
     Column('from_date_time', DateTime),
     Column('until_date_time', DateTime),
@@ -153,7 +153,7 @@ player_residency = Table(
 player_location = Table(
     'player_location',
     Base.metadata,
-    Column('player_id', Integer, ForeignKey('player.id')),
+    Column('player_id', BigInteger, ForeignKey('player.id')),
     Column('region_id', Integer, ForeignKey('region.id')),
     Column('from_date_time', DateTime),
     Column('until_date_time', DateTime),
@@ -162,7 +162,7 @@ player_location = Table(
 class Player(Base):
     """Model for player"""
     __tablename__ = 'player'
-    id = Column(Integer, primary_key=True)
+    id = Column(BigInteger, primary_key=True)
     name = Column(String)
     nation = Column(String)
     residencies = relationship('Region', secondary=player_residency)
@@ -217,7 +217,7 @@ class MilitaryAcademy(Base):
     __tablename__ = 'military_academy'
     id = Column(Integer, primary_key=True)
     date_time = Column(DateTime)
-    player_id = Column(Integer, ForeignKey('player.id'))
+    player_id = Column(BigInteger, ForeignKey('player.id'))
     player = relationship(
         'User',
         backref=backref('military_academies', lazy='dynamic')
@@ -236,7 +236,7 @@ class Factory(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    player_id = Column(Integer, ForeignKey('player.id'))
+    player_id = Column(BigInteger, ForeignKey('player.id'))
     player = relationship(
         'User',
         backref=backref('factories', lazy='dynamic')
