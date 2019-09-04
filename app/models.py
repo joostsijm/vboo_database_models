@@ -2,7 +2,7 @@
 
 import datetime
 
-from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, SmallInteger, DateTime, Table, BigInteger
+from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, SmallInteger, DateTime, BigInteger
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -76,14 +76,13 @@ class ResourceStat(Base):
     )
 
 
-state_region = Table(
-    'state_region',
-    Base.metadata,
-    Column('state_id', Integer, ForeignKey('state.id')),
-    Column('region_id', Integer, ForeignKey('region.id')),
-    Column('from_date_time', DateTime),
-    Column('until_date_time', DateTime),
-)
+class StateRegion(Base):
+    """Model for state region"""
+    __tablename__ = 'state_region'
+    state_id = Column(Integer, ForeignKey('state.id'), primary_key=True)
+    region_id = Column(Integer, ForeignKey('region.id'), primary_key=True)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
 
 
 class State(Base):
@@ -91,7 +90,7 @@ class State(Base):
     __tablename__ = 'state'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    regions = relationship('Region', secondary=state_region)
+    regions = relationship('Region', secondary='state_region')
     capital_id = Column(Integer, ForeignKey('region.id'))
     capital = relationship(
         'Region',
@@ -132,32 +131,32 @@ class DepartmentStat(Base):
     )
 
 
-player_party = Table(
-    'player_party',
-    Base.metadata,
-    Column('player_id', BigInteger, ForeignKey('player.id')),
-    Column('party_id', Integer, ForeignKey('party.id')),
-    Column('from_date_time', DateTime),
-    Column('until_date_time', DateTime),
-)
+class PlayerParty(Base):
+    """Model fro player party"""
+    __tablename__ = 'player_party'
+    player_id = Column(BigInteger, ForeignKey('player.id'), primary_key=True)
+    party_id = Column(Integer, ForeignKey('party.id'), primary_key=True)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
 
-player_residency = Table(
-    'player_residency',
-    Base.metadata,
-    Column('player_id', BigInteger, ForeignKey('player.id')),
-    Column('region_id', Integer, ForeignKey('region.id')),
-    Column('from_date_time', DateTime),
-    Column('until_date_time', DateTime),
-)
 
-player_location = Table(
-    'player_location',
-    Base.metadata,
-    Column('player_id', BigInteger, ForeignKey('player.id')),
-    Column('region_id', Integer, ForeignKey('region.id')),
-    Column('from_date_time', DateTime),
-    Column('until_date_time', DateTime),
-)
+class PlayerLocation(Base):
+    """Model for player location"""
+    __tablename__ = 'player_location'
+    player_id = Column(BigInteger, ForeignKey('player.id'), primary_key=True)
+    region_id = Column(Integer, ForeignKey('region.id'), primary_key=True)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
+
+
+class StateRegion(Base):
+    """Model for state region"""
+    __tablename__ = 'state_region'
+    state_id = Column(Integer, ForeignKey('state.id'), primary_key=True)
+    region_id = Column(Integer, ForeignKey('region.id'), primary_key=True)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
+
 
 class Player(Base):
     """Model for player"""
@@ -165,9 +164,9 @@ class Player(Base):
     id = Column(BigInteger, primary_key=True)
     name = Column(String)
     nation = Column(String)
-    residencies = relationship('Region', secondary=player_residency)
-    locations = relationship('Region', secondary=player_location)
-    parties = relationship('Region', secondary=player_party)
+    residencies = relationship('Region', secondary='player_residency')
+    locations = relationship('Region', secondary='player_location')
+    parties = relationship('Region', secondary='player_party')
 
 
 class Party(Base):
