@@ -149,15 +149,6 @@ class PlayerLocation(Base):
     until_date_time = Column(DateTime)
 
 
-class StateRegion(Base):
-    """Model for state region"""
-    __tablename__ = 'state_region'
-    state_id = Column(Integer, ForeignKey('state.id'), primary_key=True)
-    region_id = Column(Integer, ForeignKey('region.id'), primary_key=True)
-    from_date_time = Column(DateTime)
-    until_date_time = Column(DateTime)
-
-
 class Player(Base):
     """Model for player"""
     __tablename__ = 'player'
