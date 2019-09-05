@@ -149,6 +149,24 @@ class PlayerLocation(Base):
     until_date_time = Column(DateTime)
 
 
+class PlayerResidency(Base):
+    """Model for player residency"""
+    __tablename__ = 'player_residency'
+    player_id = Column(BigInteger, ForeignKey('player.id'), primary_key=True)
+    region_id = Column(Integer, ForeignKey('region.id'), primary_key=True)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
+
+
+class StateWorkPermit(Base):
+    """Model for state work permit"""
+    __tablename__ = 'state_work_permit'
+    state_id = Column(Integer, ForeignKey('state.id'), primary_key=True)
+    player_id = Column(Integer, ForeignKey('player.id'), primary_key=True)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
+
+
 class Player(Base):
     """Model for player"""
     __tablename__ = 'player'
@@ -158,6 +176,7 @@ class Player(Base):
     residencies = relationship('Region', secondary='player_residency')
     locations = relationship('Region', secondary='player_location')
     parties = relationship('Region', secondary='player_party')
+    state_work_permits = relationship('State', secondary='state_work_permit')
 
 
 class Party(Base):
