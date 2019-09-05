@@ -2,7 +2,8 @@
 
 import datetime
 
-from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, SmallInteger, DateTime, BigInteger
+from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, \
+    SmallInteger, DateTime, BigInteger, Date
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -162,7 +163,7 @@ class StateWorkPermit(Base):
     """Model for state work permit"""
     __tablename__ = 'state_work_permit'
     state_id = Column(Integer, ForeignKey('state.id'), primary_key=True)
-    player_id = Column(Integer, ForeignKey('player.id'), primary_key=True)
+    player_id = Column(BigInteger, ForeignKey('player.id'), primary_key=True)
     from_date_time = Column(DateTime)
     until_date_time = Column(DateTime)
 
@@ -173,6 +174,7 @@ class Player(Base):
     id = Column(BigInteger, primary_key=True)
     name = Column(String)
     nation = Column(String)
+    registration_date = Column(Date)
     residencies = relationship('Region', secondary='player_residency')
     locations = relationship('Region', secondary='player_location')
     parties = relationship('Region', secondary='player_party')
