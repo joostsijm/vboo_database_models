@@ -270,7 +270,7 @@ class FactoryTrack(Base):
 class FactoryLocation(Base):
     """Model for factory location"""
     __tablename__ = 'factory_location'
-    factory_id = Column(BigInteger, ForeignKey('factory.id'), primary_key=True)
+    factory_id = Column(Integer, ForeignKey('factory.id'), primary_key=True)
     region_id = Column(Integer, ForeignKey('region.id'), primary_key=True)
     from_date_time = Column(DateTime)
     until_date_time = Column(DateTime)

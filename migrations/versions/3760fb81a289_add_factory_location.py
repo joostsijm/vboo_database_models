@@ -18,7 +18,7 @@ depends_on = None
 
 def upgrade():
     op.create_table('factory_location',
-    sa.Column('factory_id', sa.BigInteger(), nullable=False),
+    sa.Column('factory_id', sa.Integer(), nullable=False),
     sa.Column('region_id', sa.Integer(), nullable=False),
     sa.Column('from_date_time', sa.DateTime(), nullable=True),
     sa.Column('until_date_time', sa.DateTime(), nullable=True),
