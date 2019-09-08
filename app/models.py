@@ -246,6 +246,7 @@ class Factory(Base):
     __tablename__ = 'factory'
     id = Column(Integer, primary_key=True)
     name = Column(String)
+    resource_type = Column(SmallInteger)
 
     player_id = Column(BigInteger, ForeignKey('player.id'))
     player = relationship(
