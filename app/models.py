@@ -311,6 +311,13 @@ class PersonalMarketStat(Base):
     id = Column(Integer, primary_key=True)
     item_type = Column(SmallInteger)
     price = Column(Integer)
+    amount = Column(BigInteger)
+
+    player_id = Column(Integer, ForeignKey('player.id'))
+    player = relationship(
+        'Player',
+        backref=backref('personal_market_stats', lazy='dynamic')
+    )
 
     market_track_id = Column(Integer, ForeignKey('market_track.id'))
     market_track = relationship(
@@ -325,6 +332,13 @@ class StateMarketStat(Base):
     id = Column(Integer, primary_key=True)
     item_type = Column(SmallInteger)
     price = Column(Integer)
+    amount = Column(BigInteger)
+
+    state_id = Column(Integer, ForeignKey('state.id'))
+    state = relationship(
+        'State',
+        backref=backref('state_market_stats', lazy='dynamic')
+    )
 
     market_track_id = Column(Integer, ForeignKey('market_track.id'))
     market_track = relationship(
