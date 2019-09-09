@@ -305,24 +305,25 @@ class MarketTrack(Base):
     date_time = Column(DateTime)
 
 
-class PersonalMarketStat(Base):
+class PlayerMarketStat(Base):
     """Model for market stat"""
-    __tablename__ = 'personal_market_stat'
+    __tablename__ = 'player_market_stat'
     id = Column(Integer, primary_key=True)
     item_type = Column(SmallInteger)
     price = Column(Integer)
     amount = Column(BigInteger)
+    total_offers = Column(Integer)
 
     player_id = Column(Integer, ForeignKey('player.id'))
     player = relationship(
         'Player',
-        backref=backref('personal_market_stats', lazy='dynamic')
+        backref=backref('player_market_stats', lazy='dynamic')
     )
 
     market_track_id = Column(Integer, ForeignKey('market_track.id'))
     market_track = relationship(
         'MarketTrack',
-        backref=backref('personal_market_stats', lazy='dynamic')
+        backref=backref('player_market_stats', lazy='dynamic')
     )
 
 
