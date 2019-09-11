@@ -314,7 +314,7 @@ class PlayerMarketStat(Base):
     amount = Column(BigInteger)
     total_offers = Column(Integer)
 
-    player_id = Column(Integer, ForeignKey('player.id'))
+    player_id = Column(BigInteger, ForeignKey('player.id'))
     player = relationship(
         'Player',
         backref=backref('player_market_stats', lazy='dynamic')
