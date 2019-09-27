@@ -3,7 +3,7 @@
 import datetime
 
 from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, \
-    SmallInteger, DateTime, BigInteger, Date
+    SmallInteger, DateTime, BigInteger, Date, Boolean
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -303,6 +303,9 @@ class MarketTrack(Base):
     __tablename__ = 'market_track'
     id = Column(Integer, primary_key=True)
     date_time = Column(DateTime)
+    player_resources = Column(Boolean, server_default='f', default=False)
+    state_resources = Column(Boolean, server_default='f', default=False)
+    items = Column(Boolean, server_default='f', default=False)
 
 
 class PlayerMarketStat(Base):
@@ -312,6 +315,10 @@ class PlayerMarketStat(Base):
     item_type = Column(SmallInteger)
     price = Column(Integer)
     amount = Column(BigInteger)
+    half_t_average = Column(Integer)
+    one_t_average = Column(Integer)
+    two_t_average = Column(Integer)
+    five_t_average = Column(Integer)
     total_offers = Column(Integer)
 
     player_id = Column(BigInteger, ForeignKey('player.id'))
