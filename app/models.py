@@ -342,10 +342,10 @@ class StateMarketStat(Base):
     price = Column(Integer)
     amount = Column(BigInteger)
 
-    state_id = Column(Integer, ForeignKey('state.id'))
-    state = relationship(
-        'State',
-        backref=backref('state_market_stats', lazy='dynamic')
+    region_id = Column(Integer, ForeignKey('region.id'))
+    region = relationship(
+        'Region',
+        backref=backref('region_market_stats', lazy='dynamic')
     )
 
     market_track_id = Column(Integer, ForeignKey('market_track.id'))
