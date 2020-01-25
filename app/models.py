@@ -48,7 +48,7 @@ class ResourceTrack(Base):
     __tablename__ = 'resource_track'
     id = Column(Integer, primary_key=True)
     resource_type = Column(SmallInteger)
-    date_time = Column(DateTime, default=datetime.datetime.utcnow)
+    date_time = Column(DateTime)
     state_id = Column(Integer, ForeignKey('state.id'))
     state = relationship(
         'State',
