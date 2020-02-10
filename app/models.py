@@ -34,10 +34,10 @@ class DeepExploration(Base):
     __tablename__ = 'deep_exploration'
     id = Column(Integer, primary_key=True)
     date_time_end = Column(DateTime)
-    region_id = Column(Integer)
+    points = Column(Integer)
     resource_type = Column(SmallInteger)
     region_id = Column(Integer, ForeignKey('region.id'))
-    region_track = relationship(
+    region = relationship(
         'Region',
         backref=backref('deep_explorations', lazy='dynamic')
     )
