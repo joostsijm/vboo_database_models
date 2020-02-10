@@ -354,12 +354,14 @@ class StateMarketStat(Base):
         backref=backref('state_market_stats', lazy='dynamic')
     )
 
+
 class TelegramAccount(Base):
     """Model for Telegram account"""
     __tablename__ = 'telegram_account'
     id = Column(BigInteger, primary_key=True)
     name = Column(String)
     registration_date = Column(DateTime)
+
 
 class TelegramHandle(Base):
     """Model for Telegram handle"""
@@ -374,6 +376,7 @@ class TelegramHandle(Base):
         backref=backref('account_handles', lazy='dynamic')
     )
 
+
 class PlayerTelegram(Base):
     """Model for belongs to"""
     __tablename__ = 'player_telegram'
@@ -381,12 +384,3 @@ class PlayerTelegram(Base):
     telegram_id = Column(BigInteger, ForeignKey('telegram_account.id'), primary_key=True)
     from_date_time = Column(DateTime, primary_key=True)
     until_date_time = Column(DateTime)
-
-class TelegramVerification(Base):
-    """Model for Telegram verification"""
-    __tablename__ = 'telegram_verification'
-    player_id = Column(BigInteger, ForeignKey('player.id'), primary_key=True)
-    telegram_id = Column(BigInteger, ForeignKey('telegram_account.id'), primary_key=True)
-    code = Column(String)
-    date_time = Column(DateTime)
-    confirmed = Column(Boolean, server_default='f', default=False)
