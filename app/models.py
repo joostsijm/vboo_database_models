@@ -33,7 +33,7 @@ class DeepExploration(Base):
     """Model for deep exploration"""
     __tablename__ = 'deep_exploration'
     id = Column(Integer, primary_key=True)
-    date_time_end = Column(DateTime)
+    until_date_time = Column(DateTime)
     points = Column(Integer)
     resource_type = Column(SmallInteger)
     region_id = Column(Integer, ForeignKey('region.id'))
@@ -41,6 +41,35 @@ class DeepExploration(Base):
         'Region',
         backref=backref('deep_explorations', lazy='dynamic')
     )
+
+class DeepExplorationOrder(Base):
+    """Model for deep exploration order"""
+    __tablename__ = 'deep_exploration_order'
+    id = Column(Integer, primary_key=True)
+    resource_type = Column(SmallInteger, nullable=False)
+    order_type = Column(SmallInteger, nullable=False)
+    amount = Column(Integer)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
+
+    region_id = Column(Integer, ForeignKey('region.id'))
+    region = relationship(
+        'Region',
+        backref=backref('resource_stats', lazy='dynamic')
+    )
+
+    order_types = {
+        0: 'max',
+        1: 'fixed',
+        2: 'percentage',
+        3: 'auto',
+    }
+
+    def order_type_name(self):
+        """Type name"""
+        if self.order_type in self.order_types:
+            return self.order_types[self.type]
+        return 'unknown'
 
 
 class ResourceTrack(Base):
