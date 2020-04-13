@@ -33,14 +33,43 @@ class DeepExploration(Base):
     """Model for deep exploration"""
     __tablename__ = 'deep_exploration'
     id = Column(Integer, primary_key=True)
-    date_time_end = Column(DateTime)
-    region_id = Column(Integer)
+    until_date_time = Column(DateTime)
+    points = Column(Integer)
     resource_type = Column(SmallInteger)
     region_id = Column(Integer, ForeignKey('region.id'))
-    region_track = relationship(
+    region = relationship(
         'Region',
         backref=backref('deep_explorations', lazy='dynamic')
     )
+
+class DeepExplorationOrder(Base):
+    """Model for deep exploration order"""
+    __tablename__ = 'deep_exploration_order'
+    id = Column(Integer, primary_key=True)
+    resource_type = Column(SmallInteger, nullable=False)
+    order_type = Column(SmallInteger, nullable=False)
+    amount = Column(Integer)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
+
+    region_id = Column(Integer, ForeignKey('region.id'))
+    region = relationship(
+        'Region',
+        backref=backref('resource_stats', lazy='dynamic')
+    )
+
+    order_types = {
+        0: 'max',
+        1: 'fixed',
+        2: 'percentage',
+        3: 'auto',
+    }
+
+    def order_type_name(self):
+        """Type name"""
+        if self.order_type in self.order_types:
+            return self.order_types[self.type]
+        return 'unknown'
 
 
 class ResourceTrack(Base):
@@ -385,12 +414,14 @@ class StateMarketStat(Base):
         backref=backref('state_market_stats', lazy='dynamic')
     )
 
+
 class TelegramAccount(Base):
     """Model for Telegram account"""
     __tablename__ = 'telegram_account'
     id = Column(BigInteger, primary_key=True)
     name = Column(String)
     registration_date = Column(DateTime)
+
 
 class TelegramHandle(Base):
     """Model for Telegram handle"""
@@ -405,6 +436,7 @@ class TelegramHandle(Base):
         backref=backref('account_handles', lazy='dynamic')
     )
 
+
 class PlayerTelegram(Base):
     """Model for belongs to"""
     __tablename__ = 'player_telegram'
@@ -412,6 +444,7 @@ class PlayerTelegram(Base):
     telegram_id = Column(BigInteger, ForeignKey('telegram_account.id'), primary_key=True)
     from_date_time = Column(DateTime, primary_key=True)
     until_date_time = Column(DateTime)
+
 
 class TelegramVerification(Base):
     """Model for Telegram verification"""
@@ -421,6 +454,7 @@ class TelegramVerification(Base):
     code = Column(String)
     date_time = Column(DateTime)
     confirmed = Column(Boolean, server_default='f', default=False)
+
 
 class Donation(Base):
     """Model for donation"""
@@ -442,6 +476,7 @@ class Donation(Base):
         backref=backref('donations', lazy='dynamic')
     )
 
+
 class DonationTrigger(Base):
     """Donation trigger"""
     __tablename__ = 'table_name'
@@ -449,6 +484,7 @@ class DonationTrigger(Base):
     resource_type = Column(Integer)
     from_date_time = Column(DateTime)
     until_date_time = Column(DateTime)
+
 
 class Fund(Base):
     """Model for fund"""
@@ -468,6 +504,7 @@ class Fund(Base):
         backref=backref('funds', lazy='dynamic')
     )
 
+
 class Balance(Base):
     """Model for balance"""
     __tablename__ = 'balance'
@@ -479,6 +516,7 @@ class Balance(Base):
     )
     amount = Column(Integer)
     resource = Column(SmallInteger)
+
 
 class Transfer(Base):
     """Model for transfer"""
