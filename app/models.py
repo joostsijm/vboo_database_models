@@ -326,6 +326,37 @@ class FactoryStat(Base):
         backref=backref('factory_stats', lazy='dynamic')
     )
 
+class FactoryOwner(Base):
+    """Model for factory owner"""
+    __tablename__ = 'factory_owner'
+    factory_id = Column(Integer, ForeignKey('factory.id'), primary_key=True)
+    owner = relationship(
+        'Factory',
+        backref=backref('owners', lazy='dynamic')
+    )
+    owner_id = Column(Integer, ForeignKey('player.id'), primary_key=True)
+    owner = relationship(
+        'Player',
+        backref=backref('owned_factories', lazy='dynamic')
+    )
+    from_date_time = Column(DateTime, primary_key=True)
+    until_date_time = Column(DateTime)
+
+
+class Auction(Base):
+    """Model for auction"""
+    __tablename__ = 'auction'
+    id = Column(Integer, primary_key=True)
+    lot = Column(String)
+    factory_id = Column(Integer, ForeignKey('factory.id'))
+    player = relationship(
+        'Factory',
+        backref=backref('won_auctions', lazy='dynamic')
+    )
+    end_date_time = Column(DateTime)
+    bet = Column(BigInteger)
+    money = Column(Boolean, server_default='f', default=False)
+
 
 class WorkerTrack(Base):
     """Model for worker track"""
@@ -469,3 +500,92 @@ class PlayerTelegram(Base):
     telegram_id = Column(BigInteger, ForeignKey('telegram_account.id'), primary_key=True)
     from_date_time = Column(DateTime, primary_key=True)
     until_date_time = Column(DateTime)
+
+
+class TelegramVerification(Base):
+    """Model for Telegram verification"""
+    __tablename__ = 'telegram_verification'
+    player_id = Column(BigInteger, ForeignKey('player.id'), primary_key=True)
+    telegram_id = Column(BigInteger, ForeignKey('telegram_account.id'), primary_key=True)
+    code = Column(String)
+    date_time = Column(DateTime)
+    confirmed = Column(Boolean, server_default='f', default=False)
+
+
+class Donation(Base):
+    """Model for donation"""
+    __tablename__ = 'donation'
+    id = Column(Integer, primary_key=True)
+    amount = Column(BigInteger)
+    resources = Column(SmallInteger)
+    date_time = Column(DateTime)
+
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    player = relationship(
+        'Player',
+        backref=backref('donations', lazy='dynamic')
+    )
+
+    fund_id = Column(BigInteger, ForeignKey('fund.id'))
+    fund = relationship(
+        'Fund',
+        backref=backref('donations', lazy='dynamic')
+    )
+
+
+class DonationTrigger(Base):
+    """Donation trigger"""
+    __tablename__ = 'table_name'
+    id = Column(Integer, primary_key=True)
+    resource_type = Column(Integer)
+    from_date_time = Column(DateTime)
+    until_date_time = Column(DateTime)
+
+
+class Fund(Base):
+    """Model for fund"""
+    __tablename__ = 'fund'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    player = relationship(
+        'Player',
+        backref=backref('funds', lazy='dynamic')
+    )
+
+    region_id = Column(Integer, ForeignKey('region.id'))
+    region_track = relationship(
+        'Region',
+        backref=backref('funds', lazy='dynamic')
+    )
+
+
+class Balance(Base):
+    """Model for balance"""
+    __tablename__ = 'balance'
+
+    fund_id = Column(Integer, ForeignKey('fund.id'))
+    fund_track = relationship(
+        'Fund',
+        backref=backref('funds', lazy='dynamic')
+    )
+    amount = Column(Integer)
+    resource = Column(SmallInteger)
+
+
+class Transfer(Base):
+    """Model for transfer"""
+    __tablename__ = 'transfer'
+
+    from_region_id = Column(Integer, ForeignKey('region.id'))
+    from_region_track = relationship(
+        'Region',
+        backref=backref('export_transfer', lazy='dynamic')
+    )
+
+    to_region_id = Column(Integer, ForeignKey('region.id'))
+    to_region_track = relationship(
+        'Region',
+        backref=backref('import_transfer', lazy='dynamic')
+    )
