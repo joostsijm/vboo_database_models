@@ -42,6 +42,7 @@ class DeepExploration(Base):
         backref=backref('deep_explorations', lazy='dynamic')
     )
 
+
 class DeepExplorationOrder(Base):
     """Model for deep exploration order"""
     __tablename__ = 'deep_exploration_order'
@@ -126,6 +127,7 @@ class State(Base):
         'Region',
         backref=backref('state_capital', lazy='dynamic')
     )
+
 
 class Department(Base):
     """Model for department"""
@@ -326,6 +328,7 @@ class FactoryStat(Base):
         backref=backref('factory_stats', lazy='dynamic')
     )
 
+
 class FactoryOwner(Base):
     """Model for factory owner"""
     __tablename__ = 'factory_owner'
@@ -388,6 +391,7 @@ class Balance(Base):
         backref=backref('balances', lazy='dynamic')
     )
 
+
 class Wage(Base):
     """Model for wage"""
     id = Column(Integer, primary_key=True)
@@ -407,6 +411,7 @@ class Wage(Base):
         'Balance',
         backref=backref('wages', lazy='dynamic')
     )
+
 
 class Withdraw(Base):
     """Model for withdraw"""
