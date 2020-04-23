@@ -361,68 +361,6 @@ class Auction(Base):
     money = Column(Boolean, server_default='f', default=False)
 
 
-class WorkerTrack(Base):
-    """Model for worker track"""
-    __tablename__ = 'worker_track'
-    id = Column(Integer, primary_key=True)
-    player_id = Column(BigInteger, ForeignKey('player.id'))
-    factory_id = Column(Integer, ForeignKey('factory.id'))
-    from_date_time = Column(DateTime)
-    energy = Column(Integer)
-
-    player = relationship(
-        'Player',
-        backref=backref('work_tracks', lazy='dynamic')
-    )
-    factory = relationship(
-        'FactoryTrack',
-        backref=backref('worker_tracks', lazy='dynamic')
-    )
-
-
-class Balance(Base):
-    """Model for balance"""
-    __tablename__ = 'balance'
-    id = Column(BigInteger, primary_key=True)
-    player_id = Column(BigInteger, ForeignKey('player.id'))
-    name = Column(String)
-    amount = Column(BigInteger)
-
-    player = relationship(
-        'Player',
-        backref=backref('balances', lazy='dynamic')
-    )
-
-
-class Wage(Base):
-    """Model for wage"""
-    __tablename__ = 'wage'
-    id = Column(Integer, primary_key=True)
-    balance_id = Column(BigInteger, ForeignKey('balance.id'))
-    factory_id = Column(Integer, ForeignKey('factory.id'))
-    date_time = Column(DateTime)
-
-    balance = relationship(
-        'Balance',
-        backref=backref('wages', lazy='dynamic')
-    )
-    factory = relationship(
-        'FactoryTrack',
-        backref=backref('wages', lazy='dynamic')
-    )
-    balance = relationship(
-        'Balance',
-        backref=backref('wages', lazy='dynamic')
-    )
-
-
-class Withdraw(Base):
-    """Model for withdraw"""
-    __tablename__ = 'withdraw'
-    id = Column(Integer, primary_key=True)
-    balance_id = Column(BigInteger, ForeignKey('balance.id'))
-
-
 class MarketTrack(Base):
     """Model for market track"""
     __tablename__ = 'market_track'
@@ -519,6 +457,68 @@ class TelegramVerification(Base):
     code = Column(String)
     date_time = Column(DateTime)
     confirmed = Column(Boolean, server_default='f', default=False)
+
+
+class WorkerTrack(Base):
+    """Model for worker track"""
+    __tablename__ = 'worker_track'
+    id = Column(Integer, primary_key=True)
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    factory_id = Column(Integer, ForeignKey('factory.id'))
+    from_date_time = Column(DateTime)
+    energy = Column(Integer)
+
+    player = relationship(
+        'Player',
+        backref=backref('work_tracks', lazy='dynamic')
+    )
+    factory = relationship(
+        'FactoryTrack',
+        backref=backref('worker_tracks', lazy='dynamic')
+    )
+
+
+class Wage(Base):
+    """Model for wage"""
+    __tablename__ = 'wage'
+    id = Column(Integer, primary_key=True)
+    balance_id = Column(BigInteger, ForeignKey('balance.id'))
+    factory_id = Column(Integer, ForeignKey('factory.id'))
+    date_time = Column(DateTime)
+
+    balance = relationship(
+        'Balance',
+        backref=backref('wages', lazy='dynamic')
+    )
+    factory = relationship(
+        'FactoryTrack',
+        backref=backref('wages', lazy='dynamic')
+    )
+    balance = relationship(
+        'Balance',
+        backref=backref('wages', lazy='dynamic')
+    )
+
+
+class Balance(Base):
+    """Model for balance"""
+    __tablename__ = 'balance'
+    id = Column(BigInteger, primary_key=True)
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    name = Column(String)
+    amount = Column(BigInteger)
+
+    player = relationship(
+        'Player',
+        backref=backref('balances', lazy='dynamic')
+    )
+
+
+class Withdraw(Base):
+    """Model for withdraw"""
+    __tablename__ = 'withdraw'
+    id = Column(Integer, primary_key=True)
+    balance_id = Column(BigInteger, ForeignKey('balance.id'))
 
 
 class Donation(Base):
