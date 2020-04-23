@@ -363,6 +363,7 @@ class Auction(Base):
 
 class WorkerTrack(Base):
     """Model for worker track"""
+    __tablename__ = 'worker_track'
     id = Column(Integer, primary_key=True)
     player_id = Column(BigInteger, ForeignKey('player.id'))
     factory_id = Column(Integer, ForeignKey('factory.id'))
@@ -381,6 +382,7 @@ class WorkerTrack(Base):
 
 class Balance(Base):
     """Model for balance"""
+    __tablename__ = 'balance'
     id = Column(BigInteger, primary_key=True)
     player_id = Column(BigInteger, ForeignKey('player.id'))
     name = Column(String)
@@ -394,6 +396,7 @@ class Balance(Base):
 
 class Wage(Base):
     """Model for wage"""
+    __tablename__ = 'wage'
     id = Column(Integer, primary_key=True)
     balance_id = Column(BigInteger, ForeignKey('balance.id'))
     factory_id = Column(Integer, ForeignKey('factory.id'))
@@ -415,6 +418,7 @@ class Wage(Base):
 
 class Withdraw(Base):
     """Model for withdraw"""
+    __tablename__ = 'withdraw'
     id = Column(Integer, primary_key=True)
     balance_id = Column(BigInteger, ForeignKey('balance.id'))
 
