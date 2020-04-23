@@ -6,6 +6,7 @@ from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, \
     SmallInteger, DateTime, BigInteger, Date, Boolean
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
 
 
 meta = MetaData(naming_convention={
@@ -459,58 +460,140 @@ class TelegramVerification(Base):
     confirmed = Column(Boolean, server_default='f', default=False)
 
 
-class WorkerTrack(Base):
-    """Model for worker track"""
-    __tablename__ = 'worker_track'
+#class WorkerTrack(Base):
+#    """Model for worker track"""
+#    __tablename__ = 'worker_track'
+#    id = Column(Integer, primary_key=True)
+#    player_id = Column(BigInteger, ForeignKey('player.id'))
+#    factory_id = Column(Integer, ForeignKey('factory.id'))
+#    from_date_time = Column(DateTime)
+#    energy = Column(Integer)
+#
+#    player = relationship(
+#        'Player',
+#        backref=backref('work_tracks', lazy='dynamic')
+#    )
+#    factory = relationship(
+#        'FactoryTrack',
+#        backref=backref('worker_tracks', lazy='dynamic')
+#    )
+
+
+#class Wage(Base):
+#    """Model for wage"""
+#    __tablename__ = 'wage'
+#    id = Column(Integer, primary_key=True)
+#    balance_id = Column(BigInteger, ForeignKey('balance.id'))
+#    factory_id = Column(Integer, ForeignKey('factory.id'))
+#    date_time = Column(DateTime)
+#
+#    balance = relationship(
+#        'Balance',
+#        backref=backref('wages', lazy='dynamic')
+#    )
+#    factory = relationship(
+#        'FactoryTrack',
+#        backref=backref('wages', lazy='dynamic')
+#    )
+#    balance = relationship(
+#        'Balance',
+#        backref=backref('wages', lazy='dynamic')
+#    )
+
+
+class Account(Base):
+    """Model for account"""
+    __tablename__ = 'account'
     id = Column(Integer, primary_key=True)
-    player_id = Column(BigInteger, ForeignKey('player.id'))
-    factory_id = Column(Integer, ForeignKey('factory.id'))
-    from_date_time = Column(DateTime)
-    energy = Column(Integer)
-
-    player = relationship(
-        'Player',
-        backref=backref('work_tracks', lazy='dynamic')
-    )
-    factory = relationship(
-        'FactoryTrack',
-        backref=backref('worker_tracks', lazy='dynamic')
-    )
-
-
-class Wage(Base):
-    """Model for wage"""
-    __tablename__ = 'wage'
-    id = Column(Integer, primary_key=True)
-    balance_id = Column(BigInteger, ForeignKey('balance.id'))
-    factory_id = Column(Integer, ForeignKey('factory.id'))
-    date_time = Column(DateTime)
-
-    balance = relationship(
-        'Balance',
-        backref=backref('wages', lazy='dynamic')
-    )
-    factory = relationship(
-        'FactoryTrack',
-        backref=backref('wages', lazy='dynamic')
-    )
-    balance = relationship(
-        'Balance',
-        backref=backref('wages', lazy='dynamic')
-    )
-
-
-class Balance(Base):
-    """Model for balance"""
-    __tablename__ = 'balance'
-    id = Column(BigInteger, primary_key=True)
-    player_id = Column(BigInteger, ForeignKey('player.id'))
     name = Column(String)
-    amount = Column(BigInteger)
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    create_date_time = Column(DateTime, server_default=func.utcnow())
+    update_date_time = Column(DateTime, onupdate=func.utcnow())
+    delete_date_time = Column(DateTime)
 
     player = relationship(
         'Player',
-        backref=backref('balances', lazy='dynamic')
+        backref=backref('cash_balances', lazy='dynamic')
+    )
+
+
+class CashBalance(Base):
+    """Model for cash balance"""
+    __tablename__ = 'cash_balance'
+    id = Column(Integer, primary_key=True)
+    account_id = Column(Integer, ForeignKey('account.id'))
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    amount = Column(BigInteger)
+    create_date_time = Column(DateTime, server_default=func.utcnow())
+    update_date_time = Column(DateTime, onupdate=func.utcnow())
+    delete_date_time = Column(DateTime)
+
+    account = relationship(
+        'Account',
+        backref=backref('cash_balances', lazy='dynamic')
+    )
+    player = relationship(
+        'Player',
+        backref=backref('cash_balances', lazy='dynamic')
+    )
+
+
+class CashMutation(Base):
+    """Model for cash mutation"""
+    __tablename__ = 'cash_mutation'
+    id = Column(Integer, primary_key=True)
+    from_cash_balance = Column(Integer, ForeignKey('cash_balance.id'))
+    to_cash_balance = Column(Integer, ForeignKey('cash_balance.id'))
+    date_time = Column(DateTime, server_default=func.utcnow())
+    amount = Column(BigInteger)
+    description = Column(String(255))
+    invoice_rule_id = Column(Integer, ForeignKey('invoice_rule'))
+
+    invoice_rule = relationship(
+        'InvoiceRule',
+        backref=backref('cash_mutations', lazy='dynamic')
+    )
+
+
+class BalanceHistory(Base):
+    """Model for balance history"""
+    __tablename__ = 'balance_history'
+    id = Column(Integer, primary_key=True)
+    current_balance = Column(BigInteger)
+    amount = Column(BigInteger)
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    resource_type = Column(SmallInteger)
+    resource_amount = Column(BigInteger)
+    cash_mutation_id = Column(Integer, ForeignKey('cash_mutation.id'))
+
+    player = relationship(
+        'Player',
+        backref=backref('balance_histories', lazy='dynamic')
+    )
+    cash_mutation = relationship(
+        'CashMutation',
+        backref=backref('balance_history', uselist=False, lazy='dynamic')
+    )
+
+
+class ResourceBalance(Base):
+    """Model for resource balance"""
+    __tablename__ = 'resource_balance'
+    id = Column(Integer, primary_key=True)
+    account_id = Column(Integer, ForeignKey('account.id'))
+    player_id = Column(BigInteger, ForeignKey('player.id'))
+    resource_type = Column(SmallInteger)
+    amount = Column(BigInteger)
+    update_date_time = Column(DateTime, server_default=func.utcnow(), onupdate=func.utcnow())
+    minimum_price = Column(Integer)
+
+    player = relationship(
+        'Player',
+        backref=backref('resource_balances', lazy='dynamic')
+    )
+    account = relationship(
+        'Account',
+        backref=backref('resource_balances', lazy='dynamic')
     )
 
 
