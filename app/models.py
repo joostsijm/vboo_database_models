@@ -127,6 +127,28 @@ class State(Base):
         backref=backref('state_capital', lazy='dynamic')
     )
 
+
+class Bloc(Base):
+    """Model for bloc"""
+    __tablename__ = 'bloc'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    state_id = Column(Integer, ForeignKey('state.id'))
+    state = relationship(
+        'State',
+        backref=backref('bloc_founders', lazy='dynamic')
+    )
+
+
+class BlocStates(Base):
+    """Model for bloc states"""
+    __tablename__ = 'bloc_states'
+    bloc_id = Column(Integer, ForeignKey('region.id'), primary_key=True)
+    state_id = Column(Integer, ForeignKey('state.id'), primary_key=True)
+    from_date_time = Column(DateTime, primary_key=True)
+    until_date_time = Column(DateTime)
+
+
 class Department(Base):
     """Model for department"""
     __tablename__ = 'department'
@@ -413,3 +435,37 @@ class PlayerTelegram(Base):
     telegram_id = Column(BigInteger, ForeignKey('telegram_account.id'), primary_key=True)
     from_date_time = Column(DateTime, primary_key=True)
     until_date_time = Column(DateTime)
+
+
+class War(Base):
+    """Model for war"""
+    __tablename__ = 'war'
+    id = Column(Integer, primary_key=True)
+    until_date_time = Column(DateTime)
+    war_type = Column(SmallInteger)
+    priority = Column(SmallInteger)
+    attacking_id = Column(Integer, ForeignKey('region.id'))
+    attacking = relationship(
+        'Region',
+        backref=backref('attacked_wars', lazy='dynamic')
+    )
+    defending_id = Column(Integer, ForeignKey('region.id'))
+    defending = relationship(
+        'Region',
+        backref=backref('defending_wars', lazy='dynamic')
+    )
+
+class war_stat(Base):
+    """Model for war stat"""
+    __tablename__ = 'war_stat'
+    id = Column(Integer, primary_key=True)
+    war_id = Column(Integer, ForeignKey('war.id'))
+    attack_damage = Column(BigInteger)
+    attack_military_base = Column(Integer)
+    attack_military_academy = Column(Integer)
+    defend_damage = Column(BigInteger)
+
+    war = relationship(
+        'War',
+        backref=backref('defending_wars', lazy='dynamic')
+    )
