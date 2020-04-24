@@ -597,6 +597,32 @@ class ResourceBalance(Base):
     )
 
 
+class ResourceTransfer(Base):
+    """Model for resource transfer"""
+    __tablename__ = 'resource_transfer'
+    id = Column(Integer, primary_key=True)
+    from_region_id = Column(Integer, ForeignKey('region.id'))
+    to_region_id = Column(Integer, ForeignKey('region.id'))
+    date_time = Column(DateTime, server_default=func.utcnow())
+    resource_type = Column(SmallInteger)
+    amount = Column(BigInteger)
+    resource_mutation_id = Column(Integer, ForeignKey('resource_mutation.id'))
+
+    resource_mutation = relationship(
+        'ResourceMutation',
+        backref=backref('resource_mutation', uselist=False, lazy='dynamic')
+    )
+
+
+class ResourceMutation(Base):
+    """Model for resource mutation"""
+    __tablename__ = 'resource_mutation'
+    id = Column(Integer, primary_key=True)
+    from_resource_balance_id = Column(Integer, ForeignKey('resource_balance.id'))
+    to_resource_balance_id = Column(Integer, ForeignKey('resource_balance.id'))
+    amount = Column(BigInteger)
+
+
 class Withdraw(Base):
     """Model for withdraw"""
     __tablename__ = 'withdraw'
@@ -629,7 +655,7 @@ class DonationTrigger(Base):
     """Donation trigger"""
     __tablename__ = 'table_name'
     id = Column(Integer, primary_key=True)
-    resource_type = Column(Integer)
+    resource_type = Column(SmallInteger)
     from_date_time = Column(DateTime)
     until_date_time = Column(DateTime)
 
